@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}*{box-sizing:border-box}</style>
+<title>Fermeture trémie combles</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout : barre de contrôle, scène 3D réaliste plein cadre, légende des cotes */
+:root{
+  --bg:#f4f6fb; --panel:#ffffff; --fg:#141a2e; --muted:#5b6380; --line:#d9deeb;
+  --accent:#1f3fbf; --accent-fg:#ffffff; --new:#f2c200;
+  --f-display:"Archivo",system-ui,sans-serif; --f-body:"Inter Tight",system-ui,sans-serif; --f-mono:"JetBrains Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0e1222; --panel:#161b30; --fg:#e8ebf5; --muted:#9aa2c0; --line:#2a3152;
+  --accent:#5b7bff; --accent-fg:#0b0f1e; --new:#ffd23f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e1222; --panel:#161b30; --fg:#e8ebf5; --muted:#9aa2c0; --line:#2a3152;
+  --accent:#5b7bff; --accent-fg:#0b0f1e; --new:#ffd23f; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.5}
+.wrap{max-width:1180px;margin:0 auto;padding-block:20px 32px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:16px}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(22px,4vw,30px);margin:0;letter-spacing:-.01em;text-wrap:balance}
+.sub{color:var(--muted);margin:2px 0 0;max-width:65ch}
+.bar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+.group{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.lbl{font-family:var(--f-mono);font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-right:4px}
+button{font:500 14px var(--f-body);border:1px solid var(--line);background:var(--panel);color:var(--fg);padding:8px 13px;border-radius:8px;cursor:pointer}
+button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
+button:focus-visible,input:focus-visible{outline:2px solid var(--new);outline-offset:2px}
+.chk{display:flex;align-items:center;gap:6px;font-size:14px;cursor:pointer}
+.stage{position:relative;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#d8d4cc;height:min(72vh,680px);min-height:380px}
+#c{display:block;width:100%;height:100%;touch-action:none}
+.hint{position:absolute;left:12px;bottom:10px;font-size:12px;color:#3a3f52;background:rgba(255,255,255,.85);padding:4px 8px;border-radius:6px}
+.badge{position:absolute;right:12px;top:12px;font:600 12px var(--f-mono);letter-spacing:.04em;padding:5px 9px;border-radius:6px;background:var(--new);color:#1a1400}
+.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.legend section{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;min-width:0}
+.legend h2{font:700 13px var(--f-display);text-transform:uppercase;letter-spacing:.06em;margin:0 0 8px;color:var(--muted)}
+dl{margin:0;display:grid;grid-template-columns:1fr auto;gap:4px 12px}
+dd{margin:0;font-family:var(--f-mono);font-variant-numeric:tabular-nums;text-align:right}
+.note{font-size:13.5px;color:var(--muted);margin:0}
+.note b{color:var(--fg)}
+@media (max-width:640px){
+  .wrap{padding-block:12px 24px;gap:12px}
+  .sub{font-size:14px}
+  .bar{flex-direction:column;align-items:stretch;gap:8px}
+  .group{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px}
+  .group::-webkit-scrollbar{display:none}
+  .lbl{flex:0 0 auto;min-width:62px}
+  button{flex:0 0 auto;padding:9px 12px;font-size:13.5px}
+  .chk{flex:0 0 auto;margin-right:12px}
+  .stage{height:62vh;min-height:340px;border-radius:10px;margin-inline:-4px}
+  .hint{font-size:11px;left:8px;bottom:8px}
+  .badge{right:8px;top:8px;font-size:11px}
+}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap">
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Fermeture de la trémie d'escalier</h1>
+    <p class="sub">Rendu 3D des combles d'après les photos : parquet chêne clair, enduit blanc, marches beige, garde-corps et main courante laiton, applique à deux globes, velux.</p>
+  </header>
+
+  <div class="bar">
+    <div class="group" role="group" aria-label="Variante">
+      <span class="lbl">Variante</span>
+      <button id="m-actuel" data-mode="actuel" aria-pressed="false">État actuel</button>
+      <button id="m-mur" data-mode="mur" aria-pressed="true">Mur plein</button>
+      <button id="m-porte" data-mode="porte" aria-pressed="false">Mur avec porte</button>
+    </div>
+    <div class="group" role="group" aria-label="Point de vue">
+      <span class="lbl">Vue</span>
+      <button id="v-photo" data-view="photo">Comme la photo</button>
+      <button id="v-proche" data-view="proche">Rapprochée</button>
+      <button id="v-cote" data-view="cote">Côté escalier</button>
+      <button id="v-haut" data-view="haut">Dessus</button>
+    </div>
+    <div class="group">
+      <label class="chk"><input type="checkbox" id="cotes" checked> Cotes</label>
+      <label class="chk"><input type="checkbox" id="hl"> Surligner le mur</label>
+    </div>
+  </div>
+
+  <div class="stage">
+    <canvas id="c" aria-label="Rendu 3D des combles"></canvas>
+    <div class="badge" id="badge">Nouveau mur</div>
+    <div class="hint">Glisser pour tourner · pincer ou molette pour zoomer</div>
+  </div>
+
+  <div class="legend">
+    <section>
+      <h2>Cotes estimées</h2>
+      <dl>
+        <dt>Largeur trémie</dt><dd>≈ 0,95 m</dd>
+        <dt>Longueur trémie</dt><dd>≈ 1,20 m</dd>
+        <dt>Hauteur des murets</dt><dd>≈ 1,05 m</dd>
+        <dt>Hauteur sous faîtage</dt><dd>≈ 2,60 m</dd>
+        <dt>Mur à créer (L × H)</dt><dd>≈ 1,15 × 2,30 m</dd>
+      </dl>
+    </section>
+    <section>
+      <h2>Le nouveau mur</h2>
+      <p class="note">Cloison entre les deux murets blancs, au ras du parquet, montée jusqu'au rampant, même enduit que l'existant. Surface : <b>≈ 2,8 m²</b>.</p>
+    </section>
+    <section>
+      <h2>À vérifier sur place</h2>
+      <p class="note">Cotes déduites des photos : <b>à mesurer avant devis</b>. Si l'escalier est le seul accès aux combles, garder la variante <b>avec porte</b>. Prévoir le déplacement de la prise sur le muret de droite.</p>
+    </section>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+(function(){
+  const canvas=document.getElementById('c');
+  const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.outputEncoding=THREE.sRGBEncoding;
+  renderer.toneMapping=THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure=1.05;
+  renderer.shadowMap.enabled=true;
+  renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+  renderer.physicallyCorrectLights=false;
+
+  const scene=new THREE.Scene();
+  scene.background=new THREE.Color(0xd8d4cc);
+
+  // Éclairage d'ambiance façon studio (environnement intérieur pour reflets PBR)
+  (function(){
+    const env=new THREE.Scene();
+    const room=new THREE.Mesh(new THREE.BoxGeometry(12,6,12),new THREE.MeshBasicMaterial({color:0x8a857c,side:THREE.BackSide}));
+    env.add(room);
+    const lamp=(w,h,d,x,y,z,c,i)=>{const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),new THREE.MeshBasicMaterial({color:new THREE.Color(c).multiplyScalar(i)}));m.position.set(x,y,z);env.add(m);};
+    lamp(3,0.1,2,0,2.9,0,0xffffff,3.5);
+    lamp(1.5,0.1,1,3,2.9,-2,0xfff1dc,4);
+    lamp(0.1,2,3,-5.9,1,0,0xffffff,1.6);
+    lamp(2,2,0.1,0,1,5.9,0xffe8c8,1.4);
+    const pm=new THREE.PMREMGenerator(renderer);
+    scene.environment=pm.fromScene(env,0.04).texture;
+  })();
+
+  const camera=new THREE.PerspectiveCamera(66,1,0.03,60);
+  const controls=new THREE.OrbitControls(camera,canvas);
+  controls.enableDamping=true; controls.maxDistance=10; controls.minDistance=0.6;
+
+  // ---------- Textures procédurales ----------
+  const rnd=(a,b)=>a+Math.random()*(b-a);
+  function canvasTex(size,draw,color=true){
+    const c=document.createElement('canvas');c.width=c.height=size;const g=c.getContext('2d');draw(g,size);
+    const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.anisotropy=renderer.capabilities.getMaxAnisotropy();
+    if(color)t.encoding=THREE.sRGBEncoding;return t;
+  }
+  // Parquet stratifié chêne clair : 1024 px = 1,20 m, lames de 0,15 m
+  const woodMap=canvasTex(1024,(g,S)=>{
+    const rowH=128;
+    for(let r=0;r<S/rowH;r++){
+      let x=-rnd(0,900);
+      while(x<S){
+        const len=rnd(700,1000), l=rnd(63,72), hue=rnd(32,38), sat=rnd(38,48);
+        for(const off of [0,-S,S]){
+          const px=x+off;
+          g.fillStyle=`hsl(${hue},${sat}%,${l}%)`;g.fillRect(px,r*rowH,len,rowH);
+          for(let k=0;k<26;k++){
+            g.strokeStyle=`hsla(${hue-4},${sat+10}%,${l-rnd(10,22)}%,${rnd(0.05,0.16)})`;g.lineWidth=rnd(0.6,2.2);
+            g.beginPath();const y0=r*rowH+rnd(4,rowH-4),amp=rnd(1,6),fr=rnd(0.004,0.012),ph=rnd(0,6);
+            for(let t=0;t<=len;t+=10){const yy=y0+Math.sin(t*fr+ph)*amp;t?g.lineTo(px+t,yy):g.moveTo(px,yy);}g.stroke();
+          }
+          if(Math.random()<0.5){g.fillStyle=`hsla(${hue-6},50%,${l-20}%,0.25)`;g.beginPath();g.ellipse(px+rnd(80,len-80),r*rowH+rnd(30,rowH-30),rnd(6,14),rnd(3,6),0,0,7);g.fill();}
+          g.fillStyle='rgba(70,50,30,.55)';g.fillRect(px,r*rowH,2,rowH);
+        }
+        x+=len;
+      }
+      g.fillStyle='rgba(70,50,30,.5)';g.fillRect(0,r*rowH+rowH-2,S,2);
+    }
+  });
+  woodMap.repeat.set(1/1.2,1/1.2);
+  const woodBump=woodMap.clone(); woodBump.encoding=THREE.LinearEncoding; woodBump.needsUpdate=true;
+
+  // Enduit blanc légèrement grainé
+  const plasterBump=canvasTex(512,(g,S)=>{
+    const d=g.createImageData(S,S);for(let i=0;i<d.data.length;i+=4){const v=118+Math.random()*20;d.data[i]=d.data[i+1]=d.data[i+2]=v;d.data[i+3]=255;}g.putImageData(d,0,0);
+    g.filter='blur(1.2px)';g.drawImage(g.canvas,0,0);g.filter='none';
+    for(let k=0;k<60;k++){g.fillStyle=`rgba(${Math.random()<.5?255:0},0,0,0)`;}
+  },false);
+  plasterBump.repeat.set(1.5,1.5);
+
+  // Marches en pierre beige mouchetée
+  const stoneMap=canvasTex(512,(g,S)=>{
+    g.fillStyle='#e7dcc6';g.fillRect(0,0,S,S);
+    for(let i=0;i<9000;i++){g.fillStyle=`hsla(${rnd(30,42)},${rnd(15,35)}%,${rnd(62,90)}%,${rnd(.2,.6)})`;g.fillRect(rnd(0,S),rnd(0,S),rnd(1,3),rnd(1,3));}
+    for(let i=0;i<40;i++){g.fillStyle=`hsla(35,20%,${rnd(70,85)}%,.25)`;g.beginPath();g.arc(rnd(0,S),rnd(0,S),rnd(8,30),0,7);g.fill();}
+  });
+  stoneMap.repeat.set(2,2);
+
+  // Métal brossé (frigo)
+  const brushed=canvasTex(512,(g,S)=>{
+    g.fillStyle='#b9bdc3';g.fillRect(0,0,S,S);
+    for(let i=0;i<1600;i++){g.strokeStyle=`rgba(${Math.random()<.5?255:90},${Math.random()<.5?255:90},${Math.random()<.5?255:95},${rnd(.03,.09)})`;g.lineWidth=rnd(.5,1.5);const y=rnd(0,S);g.beginPath();g.moveTo(0,y);g.lineTo(S,y+rnd(-2,2));g.stroke();}
+  });
+
+  // ---------- Matériaux ----------
+  const plaster=new THREE.MeshStandardMaterial({color:0xf3f1ec,roughness:0.92,bumpMap:plasterBump,bumpScale:0.0025,side:THREE.DoubleSide,envMapIntensity:0.6});
+  const plasterNew=plaster.clone();
+  const floorM=new THREE.MeshPhysicalMaterial({map:woodMap,bumpMap:woodBump,bumpScale:0.0015,roughness:0.55,clearcoat:0.25,clearcoatRoughness:0.45,envMapIntensity:0.7});
+  const stoneM=new THREE.MeshStandardMaterial({map:stoneMap,roughness:0.6,envMapIntensity:0.6});
+  const brass=new THREE.MeshStandardMaterial({color:0xc9a35a,metalness:1,roughness:0.32,envMapIntensity:1.2});
+  const blackM=new THREE.MeshStandardMaterial({color:0x151515,roughness:0.5,metalness:0.3});
+  const whitePlast=new THREE.MeshStandardMaterial({color:0xf7f7f5,roughness:0.4,envMapIntensity:0.8});
+  const fridgeM=new THREE.MeshStandardMaterial({map:brushed,color:0xdfe2e6,metalness:0.55,roughness:0.42,envMapIntensity:1});
+  const globeM=new THREE.MeshPhysicalMaterial({color:0xfffaf0,emissive:0xffe6bd,emissiveIntensity:1.4,roughness:0.35,transmission:0,clearcoat:0.6});
+  const glassM=new THREE.MeshPhysicalMaterial({color:0x5c6470,roughness:0.15,metalness:0.1,clearcoat:1,envMapIntensity:1.4});
+  const blindM=new THREE.MeshStandardMaterial({color:0x6f747c,roughness:0.9});
+  const rubberM=new THREE.MeshStandardMaterial({color:0x222222,roughness:0.8});
+
+  // ---------- Géométrie de la pièce (mètres) ----------
+  const XL=-2.5, XR=3.5, ZF=-3, ZB=1.2, RIDGE=0.5, HR=2.6, HK=1.0;
+  const h=x=> x<RIDGE ? HK+(HR-HK)*(x-XL)/(RIDGE-XL) : HK+(HR-HK)*(XR-x)/(XR-RIDGE);
+  const TX0=0, TX1=0.95, TZ1=ZB;
+
+  function add(geo,mat,x=0,y=0,z=0,parent=scene){const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;parent.add(m);return m;}
+  const box=(w,hh,d,mat,x,y,z,p)=>add(new THREE.BoxGeometry(w,hh,d),mat,x,y,z,p);
+  function rbox(w,hh,d,r,mat,x,y,z,p){
+    r=Math.min(r,w/2-0.001,hh/2-0.001,d/2-0.001);
+    const s=new THREE.Shape();const W=w-2*r,H=hh-2*r;s.moveTo(-W/2,-H/2);s.lineTo(W/2,-H/2);s.lineTo(W/2,H/2);s.lineTo(-W/2,H/2);s.lineTo(-W/2,-H/2);
+    const g=new THREE.ExtrudeGeometry(s,{depth:Math.max(d-2*r,0.001),bevelEnabled:true,bevelThickness:r,bevelSize:r,bevelSegments:3,curveSegments:4});
+    g.translate(0,0,-(d-2*r)/2);g.computeVertexNormals();
+    return add(g,mat,x,y,z,p);
+  }
+
+  // Plancher (avec trémie)
+  const fs=new THREE.Shape([[XL,-ZF],[XR,-ZF],[XR,-ZB],[XL,-ZB]].map(p=>new THREE.Vector2(p[0],p[1])));
+  fs.holes.push(new THREE.Path([[TX0,0],[TX0,-TZ1],[TX1,-TZ1],[TX1,0]].map(p=>new THREE.Vector2(p[0],p[1]))));
+  const floor=add(new THREE.ShapeGeometry(fs),floorM); floor.rotation.x=-Math.PI/2; floor.castShadow=false;
+  // Barre de seuil laiton + joint noir en bord de trémie
+  box(TX1-TX0+0.1,0.012,0.035,brass,(TX0+TX1)/2,0.006,-0.03);
+  box(TX1-TX0+0.1,0.013,0.012,rubberM,(TX0+TX1)/2,0.007,-0.01);
+
+  // Rampants : groupe local (x le long de la pente, y normal, z = profondeur)
+  const a=Math.atan((HR-HK)/(XR-RIDGE)), L=Math.hypot(XR-RIDGE,HR-HK);
+  function slopeGroup(side){
+    const grp=new THREE.Group();grp.position.set(RIDGE,HR,0);
+    grp.rotation.z= side>0 ? -a : Math.PI+a; if(side<0) grp.rotation.x=Math.PI;
+    scene.add(grp);return grp;
+  }
+  function slopePlane(grp,holes){
+    const s=new THREE.Shape([[0,ZF],[L,ZF],[L,ZB],[0,ZB]].map(p=>new THREE.Vector2(p[0],p[1])));
+    (holes||[]).forEach(hh=>s.holes.push(new THREE.Path([[hh[0],hh[2]],[hh[0],hh[3]],[hh[1],hh[3]],[hh[1],hh[2]]].map(p=>new THREE.Vector2(p[0],p[1])))));
+    const g=new THREE.ShapeGeometry(s);g.rotateX(Math.PI/2);
+    const m=add(g,plaster,0,0,0,grp);m.castShadow=true;return m;
+  }
+  const right=slopeGroup(1), left=slopeGroup(-1);
+  // Velux encastré dans le rampant droit
+  const vx0=0.75,vx1=1.55,vz0=-1.0,vz1=-0.05,dep=0.28;
+  slopePlane(right,[[vx0,vx1,vz0,vz1]]);
+  slopePlane(left);
+  // ébrasements du velux (au-dessus du plan, y local positif = vers le toit)
+  box(vx1-vx0,dep,0.02,plaster,(vx0+vx1)/2,dep/2,vz0,right);
+  box(vx1-vx0,dep,0.02,plaster,(vx0+vx1)/2,dep/2,vz1,right);
+  box(0.02,dep,vz1-vz0,plaster,vx0,dep/2,(vz0+vz1)/2,right);
+  box(0.02,dep,vz1-vz0,plaster,vx1,dep/2,(vz0+vz1)/2,right);
+  // cadre blanc + store gris + vitre
+  const fx0=vx0+0.06,fx1=vx1-0.06,fz0=vz0+0.06,fz1=vz1-0.06;
+  [[fx0,fx1,fz0,fz0],[fx0,fx1,fz1,fz1]].forEach(f=>box(fx1-fx0,0.05,0.05,whitePlast,(fx0+fx1)/2,dep-0.02,f[2],right));
+  [[fx0],[fx1]].forEach(f=>box(0.05,0.05,fz1-fz0,whitePlast,f[0],dep-0.02,(fz0+fz1)/2,right));
+  box(fx1-fx0-0.05,0.01,fz1-fz0-0.05,blindM,(fx0+fx1)/2,dep-0.01,(fz0+fz1)/2,right);
+  box(fx1-fx0,0.01,fz1-fz0,glassM,(fx0+fx1)/2,dep+0.01,(fz0+fz1)/2,right);
+
+  // Retombée de poutre (bandeau visible sous le rampant droit)
+  (function(){const b=box(0.22,0.14,ZB-ZF,plaster,0,-0.07,0,right);b.position.x=1.95;b.position.z=(ZB+ZF)/2;})();
+
+  // Murs bas (jambettes) + pignon
+  box(0.08,HK,ZB-ZF,plaster,XL,HK/2,(ZB+ZF)/2);
+  box(0.08,HK,ZB-ZF,plaster,XR,HK/2,(ZB+ZF)/2);
+  const gs=new THREE.Shape([[XL,0],[XR,0],[XR,HK],[RIDGE,HR],[XL,HK]].map(p=>new THREE.Vector2(p[0],p[1])));
+  add(new THREE.ShapeGeometry(gs),plaster,0,0,ZB);
+  // Plinthes blanches
+  box(XR-XL,0.06,0.012,whitePlast,(XL+XR)/2,0.03,ZB-0.006);
+
+  // Spots encastrés dans les zones basses
+  [[-1.6,-0.6],[2.6,-0.9]].forEach(([x,z])=>{
+    const y=h(x)-0.004; const s=add(new THREE.CylinderGeometry(0.035,0.035,0.01,24),new THREE.MeshStandardMaterial({color:0xffffff,emissive:0xfff3e0,emissiveIntensity:2}),x,y,z);
+    s.rotation.z= x<RIDGE ? a : -a; s.castShadow=false;
+    const pl=new THREE.PointLight(0xfff0d8,0.35,3.5,2);pl.position.set(x,y-0.15,z);scene.add(pl);
+  });
+
+  // ---------- Cage d'escalier ----------
+  const D=-2.7;
+  box(TX1-TX0+0.2,-D,0.06,plaster,(TX0+TX1)/2,D/2,ZB+0.03);
+  box(0.08,-D,TZ1+0.05,plaster,TX1+0.06,D/2,TZ1/2);
+  box(0.08,-D+D*0.35,TZ1,plaster,TX0-0.1,D/2+D*0.18,TZ1/2);
+  const R=0.185,G=0.2;
+  for(let i=0;i<6;i++){
+    const top=-(i+1)*R;
+    rbox(TX1-TX0-0.004,0.04,G+0.02,0.006,stoneM,(TX0+TX1)/2,top-0.02,i*G+G/2);
+    box(TX1-TX0-0.01,R,0.02,stoneM,(TX0+TX1)/2,top+R/2-0.04+0.0,i*G+0.01);
+    box(TX1-TX0-0.01,Math.max(top-D-0.04,0.01),G,plaster,(TX0+TX1)/2,(top-0.04+D)/2,i*G+G/2);
+  }
+  // Palier bas qui tourne à gauche
+  rbox(1.6,0.04,0.6,0.006,stoneM,TX1-0.8,-7*R-0.02,ZB-0.3);
+
+  // Garde-corps laiton côté gauche (barreaux plats)
+  const stepTop=z=>-(Math.min(5,Math.floor(Math.max(z,0)/G))+1)*R;
+  const railH=0.92;
+  for(let i=0;i<10;i++){const z=0.06+i*0.12; const t=stepTop(z); box(0.02,railH,0.02,brass,TX0+0.035,t+railH/2,z);}
+  const rail=new THREE.CatmullRomCurve3([new THREE.Vector3(TX0+0.035,stepTop(0.06)+railH,0.02),new THREE.Vector3(TX0+0.035,stepTop(1.15)+railH,1.18)]);
+  add(new THREE.TubeGeometry(rail,8,0.012,12,false),brass);
+  // Main courante ronde sur mur droit puis mur du fond, avec crosse en haut
+  const hrPts=[
+    [TX1-0.01,0.88,-0.05],[TX1-0.01,0.92,0.06],[TX1-0.01,0.86,0.2],
+    [TX1-0.01,0.88-R*5,1.0],[TX1-0.12,0.88-R*5.8,ZB-0.05],[TX0-0.5,0.88-R*7.5,ZB-0.05]
+  ].map(p=>new THREE.Vector3(p[0]-0.04,p[1],p[2]));
+  const hrCurve=new THREE.CatmullRomCurve3(hrPts,false,'centripetal');
+  add(new THREE.TubeGeometry(hrCurve,80,0.022,16,false),brass);
+  [0.25,0.55,0.85].forEach(t=>{const p=hrCurve.getPoint(t);box(0.04,0.03,0.03,blackM,p.x+0.02,p.y-0.035,p.z);});
+  [0.95].forEach(t=>{const p=hrCurve.getPoint(t);box(0.03,0.03,0.04,blackM,p.x,p.y-0.035,p.z+0.025);});
+
+  // Murets (garde-corps maçonnés)
+  rbox(0.1,1.05,1.0,0.008,plaster,TX0-0.06,0.525,0.5);
+  rbox(0.11,1.1,TZ1,0.008,plaster,TX1+0.06,0.55,TZ1/2);
+  box(0.1,0.06,0.012,whitePlast,TX0-0.06,0.03,-0.004);
+  box(0.11,0.06,0.012,whitePlast,TX1+0.06,0.03,-0.004);
+  // Prise (bouton noir) sur le muret droit, côté escalier
+  rbox(0.012,0.08,0.08,0.008,whitePlast,TX1-0.0,0.98,0.12);
+  add(new THREE.CylinderGeometry(0.022,0.022,0.006,24),blackM,TX1-0.008,0.98,0.12).rotation.z=Math.PI/2;
+  // Barrière enroulable blanche (cassette + fixations)
+  rbox(0.07,0.98,0.07,0.012,whitePlast,TX1-0.035,0.5,0.03);
+  rbox(0.1,0.05,0.08,0.01,whitePlast,TX1-0.04,1.02,0.03);
+  [[0.82],[0.18]].forEach(([y])=>rbox(0.03,0.08,0.06,0.006,whitePlast,TX0-0.115,y,0.25));
+  [[0.82],[0.18]].forEach(([y])=>rbox(0.012,0.04,0.035,0.004,whitePlast,TX1-0.075,y,0.03));
+
+  // Applique laiton à deux globes (mur du fond)
+  const sconce=new THREE.Group();sconce.position.set(0.42,1.72,ZB-0.005);scene.add(sconce);
+  add(new THREE.CylinderGeometry(0.06,0.06,0.02,32),brass,0,0,-0.01,sconce).rotation.x=Math.PI/2;
+  box(0.012,0.2,0.012,brass,0,-0.02,-0.04,sconce);
+  box(0.12,0.012,0.012,brass,-0.03,0.06,-0.04,sconce);
+  add(new THREE.SphereGeometry(0.055,32,20),globeM,-0.1,0.06,-0.05,sconce).castShadow=false;
+  add(new THREE.SphereGeometry(0.055,32,20),globeM,0.05,-0.1,-0.05,sconce).castShadow=false;
+  const sconceL=new THREE.PointLight(0xffd9a3,0.9,6,2);sconceL.position.set(0.42,1.7,ZB-0.18);sconceL.castShadow=true;sconceL.shadow.mapSize.set(1024,1024);sconceL.shadow.bias=-0.002;scene.add(sconceL);
+
+  // Lumière du jour (velux) + remplissage
+  scene.add(new THREE.HemisphereLight(0xfffaf2,0x8a7458,0.35));
+  const sun=new THREE.DirectionalLight(0xfff4e6,0.9);sun.position.set(3,6,-2.5);sun.target.position.set(0.5,0,0.3);scene.add(sun.target);
+  sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);sun.shadow.radius=4;sun.shadow.bias=-0.0006;
+  Object.assign(sun.shadow.camera,{left:-4,right:4,top:4,bottom:-4,near:0.5,far:15});scene.add(sun);
+  const fill=new THREE.PointLight(0xfffcf5,0.35,8,2);fill.position.set(0.6,1.9,-2.2);scene.add(fill);
+
+  // ---------- Mobilier et objets ----------
+  // Petit frigo gris argent
+  const fr=new THREE.Group();fr.position.set(-0.4,0,0.55);scene.add(fr);
+  rbox(0.5,0.84,0.55,0.02,fridgeM,0,0.42,0,fr);
+  box(0.47,0.004,0.004,blackM,0,0.62,-0.276,fr);
+  rbox(0.44,0.035,0.06,0.01,new THREE.MeshStandardMaterial({color:0xd9dcdf,roughness:0.35}),0,0.825,-0.25,fr);
+  box(0.05,0.03,0.005,new THREE.MeshStandardMaterial({color:0x333333}),0,0.7,-0.278,fr);
+  // Sacoches posées dessus
+  rbox(0.42,0.08,0.3,0.02,new THREE.MeshStandardMaterial({color:0xd99aa6,metalness:0.5,roughness:0.35}),-0.42,0.89,0.5);
+  rbox(0.46,0.09,0.32,0.035,new THREE.MeshStandardMaterial({color:0xbfa99a,roughness:0.6}),-0.4,0.975,0.52);
+
+  // Sacs et cartons de rangement (formes organiques)
+  function bag(x,z,w,hh,d,color,opts={}){
+    const g=new THREE.SphereGeometry(0.5,24,18);const p=g.attributes.position;
+    for(let i=0;i<p.count;i++){let X=p.getX(i),Y=p.getY(i),Z=p.getZ(i);
+      const n=1+0.08*Math.sin(X*13+Z*7)+0.06*Math.cos(Y*11+X*5);
+      Y=Y<0?Y*0.35:Y; p.setXYZ(i,X*n*w,(Y+0.18)*hh,Z*n*d);}
+    g.computeVertexNormals();
+    const m=new THREE.MeshPhysicalMaterial(Object.assign({color,roughness:0.55,clearcoat:0.4,clearcoatRoughness:0.5,sheen:0},opts));
+    return add(g,m,x,0,z);
+  }
+  bag(-1.2,0.6,1.0,0.8,0.8,0xe9e7e2,{transparent:true,opacity:0.92,roughness:0.3});
+  bag(-1.0,0.0,0.7,0.6,0.7,0xd8332f);
+  bag(-1.7,-0.4,0.9,0.5,0.8,0xf2f2ee);
+  bag(1.9,0.55,1.0,1.0,0.9,0xe4e6ea,{transparent:true,opacity:0.92,roughness:0.3});
+  bag(2.4,-0.1,0.9,0.95,0.8,0x2f55b8);
+  bag(1.55,0.9,0.6,0.7,0.5,0xe24b2a);
+  bag(2.9,0.5,0.7,0.6,0.7,0xf3c623);
+  rbox(0.5,0.4,0.45,0.01,new THREE.MeshStandardMaterial({color:0xb08c62,roughness:0.9}),1.75,0.2,0.2);
+  // Coussin rose + plaid
+  const cush=rbox(0.55,0.5,0.14,0.07,new THREE.MeshStandardMaterial({color:0xe48bc3,roughness:0.85}),1.45,0.3,-0.45);cush.rotation.set(-0.35,-0.5,0.05);
+  bag(1.5,-0.55,0.8,0.12,0.7,0xf4f1ec,{roughness:0.95,clearcoat:0});
+
+  // ---------- Nouveau mur ----------
+  const WX0=TX0-0.11, WX1=TX1+0.115, WT=0.072;
+  function wallShape(door){
+    const pts=[[WX0,0]];
+    if(door) pts.push([0.06,0],[0.06,2.04],[0.89,2.04],[0.89,0]);
+    pts.push([WX1,0],[WX1,h(WX1)],[RIDGE,HR],[WX0,h(WX0)]);
+    return new THREE.Shape(pts.map(p=>new THREE.Vector2(p[0],p[1])));
+  }
+  const yellow=new THREE.Color(0xf2c200);
+  const edgeLines=[];
+  function makeWall(door){
+    const grp=new THREE.Group();
+    const geo=new THREE.ExtrudeGeometry(wallShape(door),{depth:WT,bevelEnabled:false});
+    add(geo,plasterNew,0,0,0,grp);
+    const e=new THREE.LineSegments(new THREE.EdgesGeometry(geo),new THREE.LineBasicMaterial({color:yellow}));e.visible=false;edgeLines.push(e);grp.add(e);
+    // plinthe côté combles
+    if(door){box(0.06-WX0,0.06,0.012,whitePlast,(WX0+0.06)/2,0.03,-0.006,grp);box(WX1-0.89,0.06,0.012,whitePlast,(WX1+0.89)/2,0.03,-0.006,grp);}
+    else box(WX1-WX0,0.06,0.012,whitePlast,(WX0+WX1)/2,0.03,-0.006,grp);
+    if(door){
+      // chambranle
+      box(0.05,2.09,0.015,whitePlast,0.045,1.045,-0.008,grp);box(0.05,2.09,0.015,whitePlast,0.905,1.045,-0.008,grp);box(0.91,0.05,0.015,whitePlast,0.475,2.065,-0.008,grp);
+      const piv=new THREE.Group();piv.position.set(0.075,0,WT);piv.rotation.y=-0.55;grp.add(piv);
+      rbox(0.8,2.02,0.04,0.004,new THREE.MeshStandardMaterial({color:0xfafafa,roughness:0.45}),0.4,1.01,0.02,piv);
+      box(0.12,0.018,0.018,brass,0.66,1.0,0.06,piv);
+      add(new THREE.CylinderGeometry(0.025,0.025,0.01,24),brass,0.72,1.0,0.042,piv).rotation.x=Math.PI/2;
+    }
+    grp.position.z=-WT;scene.add(grp);return grp;
+  }
+  const wallPlain=makeWall(false), wallDoor=makeWall(true);
+
+  // ---------- Cotes ----------
+  const dims=new THREE.Group();scene.add(dims);
+  const dimMat=new THREE.LineBasicMaterial({color:0x1f3fbf,depthTest:false,transparent:true});
+  const fmt=v=>v.toFixed(2).replace('.',',')+' m';
+  function label(text,pos,isNew){
+    const c=document.createElement('canvas');c.width=320;c.height=96;const g=c.getContext('2d');
+    g.fillStyle=isNew?'#f2c200':'#1f3fbf';g.beginPath();g.roundRect?g.roundRect(4,8,312,80,40):g.rect(4,8,312,80);g.fill();
+    g.fillStyle=isNew?'#1a1400':'#ffffff';g.font='600 46px "JetBrains Mono", ui-monospace, monospace';g.textAlign='center';g.textBaseline='middle';g.fillText(text,160,50);
+    const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;
+    const s=new THREE.Sprite(new THREE.SpriteMaterial({map:t,depthTest:false,transparent:true}));
+    s.scale.set(0.3,0.09,1);s.position.copy(pos);s.renderOrder=999;dims.add(s);return s;
+  }
+  function dim(a,b,tick,text,isNew,group){
+    a=new THREE.Vector3(...a);b=new THREE.Vector3(...b);tick=new THREE.Vector3(...tick).multiplyScalar(0.05);
+    const pts=[a,b, a.clone().add(tick),a.clone().sub(tick), b.clone().add(tick),b.clone().sub(tick)];
+    const l=new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(pts),isNew?new THREE.LineBasicMaterial({color:0xd4a800,depthTest:false,transparent:true}):dimMat);
+    l.renderOrder=998;(group||dims).add(l);
+    const s=label(text||fmt(a.distanceTo(b)),a.clone().add(b).multiplyScalar(0.5),isNew);
+    if(group){dims.remove(s);group.add(s);}
+  }
+  // Trémie
+  dim([TX0,0.03,-0.2],[TX1,0.03,-0.2],[0,0,1],'0,95 m');
+  dim([TX1+0.17,1.13,0],[TX1+0.17,1.13,TZ1],[1,0,0],'1,20 m');
+  // Murets
+  dim([TX0-0.18,0,-0.03],[TX0-0.18,1.05,-0.03],[1,0,0],'1,05 m');
+  dim([TX1+0.17,0,-0.03],[TX1+0.17,1.1,-0.03],[1,0,0],'1,10 m');
+  // Jambettes et faîtage
+  dim([XL+0.1,0,-1.6],[XL+0.1,HK,-1.6],[0,0,1],'1,00 m');
+  dim([XR-0.1,0,-1.6],[XR-0.1,HK,-1.6],[0,0,1],'1,00 m');
+  // Cotes du nouveau mur (visibles seulement avec le mur)
+  const newDims=new THREE.Group();dims.add(newDims);
+  dim([WX0,2.42,-0.15],[WX1,2.42,-0.15],[0,1,0],'1,15 m',true,newDims);
+  dim([WX1+0.12,0,-0.15],[WX1+0.12,h(WX1),-0.15],[1,0,0],'2,30 m',true,newDims);
+  dim([RIDGE,0,-0.25],[RIDGE,HR,-0.25],[1,0,0],'2,60 m',true,newDims);
+  const doorDims=new THREE.Group();dims.add(doorDims);
+  dim([0.06,2.1,-0.2],[0.89,2.1,-0.2],[0,1,0],'0,83 m',true,doorDims);
+  dim([0.2,0,-0.2],[0.2,2.04,-0.2],[1,0,0],'2,04 m',true,doorDims);
+  // Faîtage en état actuel (au-dessus de la trémie)
+  const ridgeNow=new THREE.Group();dims.add(ridgeNow);
+  dim([RIDGE,0,0.6],[RIDGE,HR,0.6],[1,0,0],'2,60 m',false,ridgeNow);
+
+  // ---------- Interface ----------
+  const badge=document.getElementById('badge');
+  function setMode(mode){
+    wallPlain.visible=mode==='mur';wallDoor.visible=mode==='porte';
+    badge.hidden=mode==='actuel';badge.textContent=mode==='porte'?'Nouveau mur + porte':'Nouveau mur';
+    newDims.visible=mode!=='actuel';doorDims.visible=mode==='porte';ridgeNow.visible=mode==='actuel';
+    document.querySelectorAll('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.mode===mode));
+  }
+  document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>setMode(b.dataset.mode)));
+  const hl=document.getElementById('hl');
+  hl.addEventListener('change',()=>{edgeLines.forEach(e=>e.visible=hl.checked);plasterNew.color.set(hl.checked?0xfff6cf:0xf3f1ec);});
+  const cotes=document.getElementById('cotes');
+  cotes.addEventListener('change',()=>{dims.visible=cotes.checked;});
+  setMode('mur');
+
+  const views={
+    photo:{p:[0.55,1.6,-2.4],t:[0.45,0.7,0.9]},
+    proche:{p:[0.5,1.55,-1.1],t:[0.45,0.6,1.0]},
+    cote:{p:[2.7,1.55,-1.3],t:[0.3,0.5,0.6]},
+    haut:{p:[0.5,7,-1.4],t:[0.5,0,0]}
+  };
+  let anim=null;
+  function goView(name,instant){
+    const v=views[name];
+    document.querySelectorAll('[data-view]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.view===name));
+    const to={p:new THREE.Vector3(...v.p),t:new THREE.Vector3(...v.t)};
+    // vue de dessus : on masque les rampants pour voir dedans
+    right.visible=left.visible=name!=='haut';
+    if(instant||matchMedia('(prefers-reduced-motion: reduce)').matches){camera.position.copy(to.p);controls.target.copy(to.t);return;}
+    anim={from:{p:camera.position.clone(),t:controls.target.clone()},to,t0:performance.now()};
+  }
+  document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>goView(b.dataset.view)));
+  goView('photo',true);
+
+  function resize(){const w=canvas.clientWidth,hh=canvas.clientHeight;renderer.setSize(w,hh,false);camera.aspect=w/hh;camera.fov=camera.aspect<1?82:66;camera.updateProjectionMatrix();
+    const k=camera.aspect<1?1.35:1;dims.traverse(o=>{if(o.isSprite)o.scale.set(0.3*k,0.09*k,1);});}
+  new ResizeObserver(resize).observe(canvas);resize();
+
+  (function loop(now){
+    if(anim){const k=Math.min(1,(now-anim.t0)/800),e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
+      camera.position.lerpVectors(anim.from.p,anim.to.p,e);controls.target.lerpVectors(anim.from.t,anim.to.t,e);if(k>=1)anim=null;}
+    controls.update();renderer.render(scene,camera);requestAnimationFrame(loop);
+  })(performance.now());
+})();
+</script>
+
+</body>
+</html>
